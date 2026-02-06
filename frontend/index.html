@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guided ANM for GPCR Activation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Elastic Network Model (ANM) for GPCR Activation</h1>
+  </header>
+  <main>
+    <section id="upload">
+      <h2>Run GPCR-ANM</h2>
+      <div class="anm-layout">
+        <div class="anm-left">
+          <p>You can perform a guided ANM analysis on your own pair of structures. Simply upload two PDB files below: the reference <em>inactive</em> structure and the corresponding <em>active</em> structure. The server will align the structures, compute distance‑dependent spring constants, build the Hessian, and perform a normal mode analysis. Two files will be returned for download: <code>*_inactive.pdb</code> (a copy of your inactive structure) and <code>*_transition.nmd</code> (which can be uploaded in <em>VMD/Extensions/Analysis/Normal Mode Wizard/Load NMD File</em>) to observe the motions corresponsing to each modes.</p>
+          <form action="/upload" method="post" enctype="multipart/form-data" class="upload-form">
+            <label for="inactive">Inactive PDB:</label>
+            <input type="file" id="inactive" name="inactive" accept=".pdb" required><br>
+            <label for="active">Active PDB:</label>
+            <input type="file" id="active" name="active" accept=".pdb" required><br>
+            <input type="submit" value="Compute Guided ANM (demo only)">
+          </form>
+	</div>
+
+	<div class="anm-right">
+          <video controls autoplay muted loop playsinline>
+            <source src="/output_web.mp4" type="video/mp4">
+	    Your browser does not support the video tag.
+          </video>
+	</div>
+      </div>  
+    </section>
+    <section id="upload-conventional">
+      <h2>Run Conventional ANM</h2>
+      <p>Upload a single PDB file to run a conventional ANM using ProDy. The server will build the Hessian and compute normal modes. You will receive a ZIP containing <code>initial_structure.pdb</code> and <code>conventionalANM.nmd</code> for visualization in VMD (Normal Mode Wizard).</p>
+      <form action="/upload_conventional" method="post" enctype="multipart/form-data" class="upload-form">
+        <label for="structure">PDB Structure:</label>
+        <input type="file" id="structure" name="structure" accept=".pdb" required><br>
+        <input type="submit" value="Compute Conventional ANM (demo only)">
+      </form>
+    </section>
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>This website illustrates the application of a <strong>state-dependent Elastic Network Model</strong> to study the conformational transition of G-Protein Coupled Receptors (GPCRs) from an inactive to an active state. Unlike standard ANM approaches that use a universal spring constant, our <em>guided ANM</em> uses distance-dependent force constants to soften specific interactions that change significantly during activation.</p>
+      <p>The implementation here uses PDB structures <code>2rh1</code> (inactive) and <code>3sn6</code> (active), aligns them using <em>ProDy</em>, and computes pairwise distance changes between corresponding Cα atoms. Contacts that increase or decrease by more than a threshold (2 Å) during activation have their spring constants exponentially softened. This results in a Hessian matrix that captures state-aware physics for the receptor's transition.</p>
+    </section>
+    <section id="usage">
+      <h2>Methodology</h2>
+      <p>The guided ANM computation follows these steps:</p>
+      <ol>
+        <li><strong>PDB Parsing</strong>: Extract Cα atom coordinates from the inactive and active structures.</li>
+        <li><strong>Alignment</strong>: Align the active structure onto the inactive one using ProDy (Kabsch algorithm) to minimize root-mean-square deviation.</li>
+        <li><strong>Distance Changes</strong>: Compute pairwise Cα distances in both states and record the difference <code>Δr = r_active − r_inactive</code> for contacts within a 15 Å cutoff.</li>
+        <li><strong>Force Constant Softening</strong>: For contacts with |Δr| > 2 Å, set the spring constant γ<sub>ij</sub> = 0.1 · exp(−|Δr| / 5). All other contacts use γ<sub>ij</sub> = 1.</li>
+        <li><strong>Hessian Construction</strong>: Build the 3N×3N Hessian matrix by assembling 3×3 blocks based on the unit vector between residues and the force constants.</li>
+        <li><strong>Normal Mode Analysis</strong>: Solve the eigenvalue problem to obtain normal modes. The lowest non-zero modes represent the collective motions involved in the transition.</li>
+      </ol>
+    </section>
+    <section id="references">
+      <h2>References</h2>
+      <p>Current manuscript is in progress.</p>
+    </section>
+  </main>
+  <footer>
+    <a href="http://www.bahargroup.org/prody/" target="_blank" class="tab">ProDy</a>
+    <a href="https://laufercenter.org/" target="_blank" class="tab">Laufer Center</a>
+    <a href="http://www.bahargroup.org/Faculty/bahar/" target="_blank" class="tab">Bahar Lab</a>
+    <a href="https://github.com/sahags/GPCR-Guided-ANM" target="_blank" class="tab">GitHub</a>
+    <a href="https://scholar.google.com/citations?user=tDWdLkQAAAAJ&hl=en&authuser=1" target="_blank" class="tab">Google Scholar</a>
+    <p>Created by Satyaki Saha</p>
+  </footer>
+</body>
+</html>

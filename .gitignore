@@ -1,0 +1,6 @@
+jobs/
+__pycache__/
+*.pyc
+*.pdb
+*.nmd
+*.zip

@@ -1,0 +1,133 @@
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #212529;
+  /* Add a fancy molecular‑inspired background image. The image is kept fixed and scaled to cover the viewport. */
+  background: url('fancy_background.png') no-repeat center center fixed;
+  background-size: cover;
+  /* Provide a subtle overlay via a semi‑transparent background color to ensure text readability */
+  background-color: rgba(248, 249, 250, 0.85);
+  background-blend-mode: lighten;
+}
+header {
+  background-color: #343a40;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+main {
+  padding: 20px;
+}
+h2 {
+  color: #343a40;
+  border-bottom: 2px solid #343a40;
+  padding-bottom: 5px;
+}
+section {
+  margin-bottom: 40px;
+}
+
+/* Style for the upload form */
+.upload-form {
+  background-color: #ffffff;
+  padding: 20px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  max-width: 400px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.upload-form label {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.upload-form input[type="file"] {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.upload-form input[type="submit"] {
+  margin-top: 10px;
+  padding: 10px 15px;
+  background-color: #343a40;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.upload-form input[type="submit"]:hover {
+  background-color: #23272b;
+}
+footer {
+  background-color: #343a40;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
+footer {
+  background-color: #343a40;
+  color: white;
+  padding: 18px 10px 12px 10px;
+  text-align: center;
+}
+
+footer .tab {
+  display: inline-block;
+  margin: 0 8px 10px 8px;
+  padding: 8px 16px;
+  background-color: #495057;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+footer .tab:hover {
+  background-color: #6c757d;
+  transform: translateY(-1px);
+}
+
+footer p {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #dee2e6;
+}
+.anm-layout {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.anm-left {
+  max-width: 520px;
+}
+
+.anm-right video {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: #000;
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 900px) {
+  .anm-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .anm-right {
+    margin-top: 20px;
+  }
+}
+@app.route("/output_web.mp4")
+def video():
+    return send_from_directory(BASE_DIR, "output_web.mp4", mimetype="video/mp4")
